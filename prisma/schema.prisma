@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +5,1039 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model ppj_banners {
+  banner_id      Int     @id @default(autoincrement())
+  peraturan_id   Int?
+  order          Int?
+  tgl_buat       String? @db.VarChar(35)
+  tgl_modifikasi String? @db.VarChar(35)
+  pembuat        String  @db.VarChar(255)
+  pengubah       String  @db.VarChar(255)
+
+  @@index([peraturan_id], map: "fk_ppj_banners_ppj_peraturan1_idx")
+}
+
+model ppj_departemen {
+  dept_id        Int     @id @default(autoincrement())
+  parent_id      Int?    @default(0)
+  deptname       String? @db.Text
+  deptcode       String? @db.Text
+  order          Int?
+  tgl_buat       String? @db.VarChar(35)
+  tgl_modifikasi String? @db.VarChar(35)
+  pembuat        String  @db.VarChar(255)
+  pengubah       String  @db.VarChar(255)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model ppj_groups {
+  group_id       Int     @id @default(autoincrement())
+  groupname      String? @db.VarChar(50)
+  description    String? @db.Text
+  tgl_buat       String? @db.VarChar(35)
+  tgl_modifikasi String? @db.VarChar(35)
+  pembuat        String  @db.VarChar(255)
+  pengubah       String  @db.VarChar(255)
+}
+
+model ppj_link_terkait {
+  linkterkait_id Int     @id @default(autoincrement())
+  linkname       String? @db.Text
+  linkurl        String? @db.Text
+  order          Int?
+  tgl_buat       String? @db.VarChar(35)
+  tgl_modifikasi String? @db.VarChar(35)
+  pembuat        String  @db.VarChar(255)
+  pengubah       String  @db.VarChar(255)
+}
+
+model ppj_link_utama {
+  linkutama_id   Int     @id @default(autoincrement())
+  linkname       String? @db.Text
+  linkurl        String? @db.Text
+  order          Int?
+  tgl_buat       String? @db.VarChar(35)
+  tgl_modifikasi String? @db.VarChar(35)
+  pembuat        String  @db.VarChar(255)
+  pengubah       String  @db.VarChar(255)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model ppj_numbers {
+  numbers_id          Int
+  numbers_description String? @db.Text
+
+  @@ignore
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model ppj_peraturan {
+  peraturan_id            Int                        @id @default(autoincrement())
+  tipe_dokumen            ppj_peraturan_tipe_dokumen
+  judul                   String?                    @db.Text
+  teu                     String                     @db.VarChar(255)
+  dept_id                 String?                    @db.VarChar(255)
+  peraturan_category_id   Int?
+  tentang                 String?                    @db.Text
+  noperaturan             String?                    @db.Text
+  tanggal                 String?                    @db.VarChar(35)
+  lembar_negara           String?                    @db.VarChar(250)
+  lembar_negara_tambahan  String?                    @db.VarChar(250)
+  berita_negara           String?                    @db.VarChar(250)
+  file_upload             String?                    @db.Text
+  abstrak                 String?                    @db.Text
+  katalog                 String?                    @db.Text
+  tanggal_penetapan       String?                    @db.VarChar(35)
+  tanggal_pengundangan    String?                    @db.VarChar(35)
+  tags                    String?                    @db.Text
+  kondisi                 ppj_peraturan_kondisi?
+  status                  ppj_peraturan_status
+  sifat                   ppj_peraturan_sifat?
+  checksum                String?                    @db.Text
+  status_dicabut_id       String?                    @db.Text
+  status_dicabut_tentang  String?                    @db.Text
+  status_dicabut_date     String?                    @db.VarChar(35)
+  status_diubah_id        String?                    @db.Text
+  status_diubah_tentang   String?                    @db.Text
+  status_diubah_date      String?                    @db.VarChar(35)
+  status_mencabut_id      String?                    @db.Text
+  status_mencabut_tentang String?                    @db.Text
+  status_mencabut_date    String?                    @db.VarChar(35)
+  status_mengubah_id      String?                    @db.Text
+  status_mengubah_tentang String?                    @db.Text
+  status_mengubah_date    String?                    @db.VarChar(35)
+  view_count              Int?
+  download_count          Int?
+  created_by              Int?
+  updated_by              Int?
+  tgl_buat                String?                    @db.VarChar(35)
+  tgl_modifikasi          String?                    @db.VarChar(35)
+  check_banner            String                     @db.VarChar(2)
+  nomor_panggil           String                     @db.VarChar(255)
+  singkatan               String                     @db.VarChar(255)
+  cetakan                 String                     @db.VarChar(100)
+  tempat_terbit           String                     @db.VarChar(255)
+  penerbit                String                     @db.VarChar(255)
+  deskripsi_fisik         String                     @db.Text
+  sumber                  String                     @db.VarChar(255)
+  subjek                  String                     @db.VarChar(255)
+  isbn                    String                     @db.VarChar(255)
+  bahasa                  String                     @db.VarChar(255)
+  lokasi                  String                     @db.VarChar(255)
+  bidang_hukum            String                     @db.VarChar(255)
+  nomor_induk_buku        String                     @db.VarChar(255)
+  file_abstrak            String                     @db.VarChar(255)
+  file_zip                String                     @db.VarChar(255)
+  approval_1              String                     @db.Char(1)
+  approval_2              String                     @db.Char(1)
+  nomor                   String                     @db.VarChar(100)
+  link_url                String                     @db.VarChar(255)
+  keyword                 String                     @db.Text
+  slug                    String?                    @db.Text
+
+  @@index([dept_id], map: "fk_ppj_peraturan_ppj_departemen1_idx")
+  @@index([peraturan_category_id], map: "fk_ppj_peraturan_ppj_peraturan_category1_idx")
+  @@index([created_by], map: "fk_ppj_peraturan_ppj_users1_idx")
+  @@index([updated_by], map: "fk_ppj_peraturan_ppj_users2_idx")
+  @@fulltext([judul, tentang], map: "judul")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model ppj_peraturan_category {
+  peraturan_category_id Int                                        @id @default(autoincrement())
+  percategoryname       String?                                    @db.Text
+  percategorycode       String?                                    @db.Text
+  percategorygroup      String?                                    @db.Text
+  percategorydept       String?                                    @db.Text
+  percategorykondisi    ppj_peraturan_category_percategorykondisi?
+  order                 Int?
+  tgl_buat              String?                                    @db.VarChar(35)
+  tgl_modifikasi        String?                                    @db.VarChar(35)
+  pembuat               String                                     @db.VarChar(255)
+  pengubah              String                                     @db.VarChar(255)
+  tipe                  ppj_peraturan_category_tipe
+  singkatan             String?                                    @db.VarChar(100)
+  singkatan_file        String?                                    @db.VarChar(100)
+}
+
+model ppj_peraturan_detail {
+  id                      Int    @id @default(autoincrement())
+  peraturan_id            Float
+  status                  String @db.VarChar(100)
+  noperaturan             String @db.VarChar(100)
+  peraturan_id_modifikasi String @db.VarChar(35)
+  tentang                 String @db.Text
+  tanggal                 String @db.VarChar(20)
+  nomor                   String @db.Text
+}
+
+model ppj_peraturan_file {
+  id             Int    @id @default(autoincrement())
+  peraturan_id   Float
+  file           String @db.Text
+  download_count Int
+  tgl_buat       String @db.VarChar(15)
+  pembuat        String @db.VarChar(50)
+  tgl_modifikasi String @db.VarChar(15)
+  pengubah       String @db.VarChar(50)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model ppj_report_prokum_detail {
+  peraturan_id            Int?
+  dept_id                 Int?
+  peraturan_category_id   Int?
+  noperaturan             String? @db.Text
+  tentang                 String? @db.Text
+  tanggal                 String? @db.VarChar(35)
+  tahun                   String? @db.Text
+  bulan                   String? @db.Text
+  lembar_negara           String? @db.Text
+  lembar_negara_tambahan  String? @db.Text
+  berita_negara           String? @db.Text
+  file_upload             String? @db.Text
+  file_format             String? @db.Text
+  abstrak                 String? @db.Text
+  katalog                 String? @db.Text
+  tanggal_penetapan       String? @db.VarChar(35)
+  tanggal_pengundangan    String? @db.VarChar(35)
+  tags                    String? @db.Text
+  kondisi                 String? @db.Text
+  kondisi_id              Int?
+  flag_id                 Int?
+  status                  String? @db.Text
+  status_id               Int?
+  sifat                   String? @db.Text
+  sifat_id                Int?
+  checksum                String? @db.Text
+  view_count              Int?
+  download_count          Int?
+  created_by              Int?
+  updated_by              Int?
+  tgl_buat                String? @db.VarChar(35)
+  tgl_modifikasi          String? @db.VarChar(35)
+  peraturan_fullname      String? @db.Text
+  status_dicabut_id       Int?
+  status_dicabut_tentang  String? @db.Text
+  status_dicabut_date     String? @db.VarChar(35)
+  status_mencabut_id      Int?
+  status_mencabut_tentang String? @db.Text
+  status_mencabut_date    String? @db.VarChar(35)
+  status_diubah_id        Int?
+  status_diubah_tentang   String? @db.Text
+  status_diubah_date      String? @db.VarChar(35)
+  status_mengubah_id      Int?
+  status_mengubah_tentang String? @db.Text
+  status_mengubah_date    String? @db.VarChar(35)
+  status_akhir            String? @db.Text
+  created_username        String? @db.Text
+  created_fullname        String? @db.Text
+  updated_username        String? @db.Text
+  updated_fullname        String? @db.Text
+  deptname                String? @db.Text
+  deptparentid            Int?
+  percategorycode         String? @db.Text
+  percategoryname         String? @db.Text
+  url_file_download       String? @db.Text
+  url_halaman_peraturan   String? @db.Text
+
+  @@ignore
+}
+
+model ppj_tags {
+  tag_id         Int     @id @default(autoincrement())
+  tagname        String? @db.Text
+  order          Int?
+  tgl_buat       String? @db.VarChar(35)
+  tgl_modifikasi String? @db.VarChar(35)
+  pembuat        String  @db.VarChar(255)
+  pengubah       String  @db.VarChar(255)
+  icon           String? @db.VarChar(255)
+  status         String? @db.Char(1)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model ppj_users {
+  user_id         Int               @id @default(autoincrement())
+  group_id        Int?
+  unor            String            @db.VarChar(50)
+  dept_id         Int?
+  username        String?           @db.VarChar(100)
+  password        String?           @db.Text
+  status          ppj_users_status?
+  email           String?           @db.Text
+  fullname        String?           @db.Text
+  remember_token  String?           @db.VarChar(100)
+  created_by      Int?              @default(0)
+  logged_at       DateTime?         @db.DateTime(0)
+  tgl_buat        String?           @db.VarChar(35)
+  tgl_modifikasi  String?           @db.VarChar(35)
+  pembuat         String            @db.VarChar(255)
+  pengubah        String            @db.VarChar(255)
+  token_aktivasi  String            @db.Text
+  aktivasi_status String            @db.VarChar(1)
+  token_create    String            @db.VarChar(15)
+  token_update    String            @db.VarChar(15)
+  jenis           ppj_users_jenis
+  tlp             String?           @db.VarChar(15)
+
+  @@index([dept_id], map: "fk_ppj_users_ppj_departmen1_idx")
+  @@index([group_id], map: "fk_ppj_users_ppj_groups_idx")
+}
+
+model ppj_widget {
+  widget_id      Int     @id @default(autoincrement())
+  widgetname     String? @db.Text
+  widgetcontent  String? @db.Text
+  widgetmore     String? @db.Text
+  widgeticon     String? @db.Text
+  widgetlink     String? @db.Text
+  order          Int?
+  tgl_buat       String? @db.VarChar(35)
+  tgl_modifikasi String? @db.VarChar(35)
+  pembuat        String  @db.VarChar(255)
+  pengubah       String  @db.VarChar(255)
+}
+
+model t_detail_produk_hukum {
+  id                       BigInt    @id @default(autoincrement())
+  id_jenis_produk_hukum    BigInt?
+  nama_detail_produk_hukum String?   @db.VarChar(255)
+  created_at               DateTime? @db.DateTime(0)
+  updated_at               DateTime? @db.DateTime(0)
+}
+
+model t_diskusi {
+  id           BigInt    @id @default(autoincrement())
+  id_peraturan BigInt?
+  id_group     BigInt?
+  id_user      BigInt?
+  status_baca  String?   @db.VarChar(10)
+  chat         String?   @db.LongText
+  created_at   DateTime? @db.DateTime(0)
+  updated_at   DateTime? @db.DateTime(0)
+}
+
+model t_jenis_produk_hukum {
+  id         BigInt    @id @default(autoincrement())
+  nama       String?   @db.VarChar(255)
+  created_at DateTime? @db.DateTime(0)
+  updated_at DateTime? @db.DateTime(0)
+}
+
+model t_jwt_wa {
+  id         BigInt    @id @default(autoincrement())
+  token      String?   @db.Text
+  created_at DateTime? @db.DateTime(0)
+  updated_at DateTime? @db.DateTime(0)
+}
+
+model t_masa_bulan {
+  id         BigInt    @id @default(autoincrement())
+  kdbulan    String?   @db.VarChar(255)
+  nama       String?   @db.VarChar(255)
+  created_at DateTime? @db.DateTime(0)
+  updated_at DateTime? @db.DateTime(0)
+}
+
+model t_pengusulan_puu {
+  id               BigInt    @id @default(autoincrement())
+  id_user          BigInt?
+  id_unor          BigInt?
+  id_pic           BigInt?
+  jenis_peraturan  String?   @db.VarChar(255)
+  jenis_form       String?   @db.VarChar(255)
+  nm_produk_hukum  String?   @db.VarChar(255)
+  waktuPenyususnan String?   @db.VarChar(255)
+  waktuPembahasan  String?   @db.VarChar(255)
+  waktuHarmonisasi String?   @db.VarChar(255)
+  waktuPenetapan   String?   @db.VarChar(255)
+  created_at       DateTime? @db.DateTime(0)
+  update_at        DateTime? @db.DateTime(0)
+}
+
+model t_pic_puu {
+  id         BigInt    @id @default(autoincrement())
+  nama       String?   @db.VarChar(255)
+  tlp        String?   @db.VarChar(15)
+  created_at DateTime? @db.DateTime(0)
+  updated_at DateTime? @db.DateTime(0)
+}
+
+model t_target_capaian {
+  id                           BigInt    @id @default(autoincrement())
+  id_jenis_produk_hukum        BigInt?
+  id_detail_jenis_produk_hukum BigInt?
+  id_masa                      BigInt?
+  nama                         String?   @db.VarChar(255)
+  bobot                        Float?
+  created_at                   DateTime? @db.DateTime(0)
+  updated_at                   DateTime? @db.DateTime(0)
+}
+
+model t_target_deskripsi {
+  id                           BigInt    @id @default(autoincrement())
+  id_jenis_produk_hukum        BigInt?
+  id_detail_jenis_produk_hukum BigInt?
+  id_masa                      BigInt?
+  nama                         String?   @db.VarChar(255)
+  created_at                   DateTime? @db.DateTime(0)
+  updated_at                   DateTime? @db.DateTime(0)
+}
+
+model t_target_peraturan_melekat_pada_peraturan {
+  id                BigInt    @id @default(autoincrement())
+  id_peraturan      BigInt?
+  id_target_capaian BigInt?
+  path              String?   @db.Text
+  upload_time       DateTime? @db.DateTime(0)
+  catat_pemrakarasa String?   @db.Text
+  catat_biro_hukum  String?   @db.Text
+  created_at        DateTime? @db.DateTime(0)
+  updated_at        DateTime? @db.DateTime(0)
+}
+
+model t_tindak_lanjut {
+  id           BigInt    @id @default(autoincrement())
+  id_peraturan BigInt?
+  id_masa      BigInt?
+  path         String?   @db.Text
+  created_at   DateTime? @db.DateTime(0)
+  update_at    DateTime? @db.DateTime(0)
+}
+
+model t_uri_api {
+  id         BigInt    @id @default(autoincrement())
+  uri        String?   @db.VarChar(255)
+  created_at DateTime? @db.DateTime(0)
+  updated_at DateTime? @db.DateTime(0)
+}
+
+model tb_agenda {
+  id             Int     @id @default(autoincrement())
+  judul          String  @db.VarChar(255)
+  tanggal        String  @db.VarChar(15)
+  jam            String  @db.VarChar(15)
+  tempat         String  @db.VarChar(255)
+  isi            String  @db.Text
+  lampiran       String  @db.Text
+  pembuat        String  @db.VarChar(50)
+  tgl_buat       String  @db.VarChar(15)
+  pengubah       String  @db.VarChar(50)
+  tgl_modifikasi String  @db.VarChar(15)
+  slug           String? @db.Text
+}
+
+model tb_agenda_karo {
+  id             Int    @id @default(autoincrement())
+  judul          String @db.VarChar(255)
+  tanggal        String @db.VarChar(15)
+  jam            String @db.VarChar(15)
+  tempat         String @db.VarChar(255)
+  isi            String @db.Text
+  disposisi      Int
+  nama           String @db.VarChar(200)
+  lampiran       String @db.Text
+  pembuat        String @db.VarChar(50)
+  tgl_buat       String @db.VarChar(15)
+  pengubah       String @db.VarChar(50)
+  tgl_modifikasi String @db.VarChar(15)
+}
+
+model tb_banner_home {
+  id             Int    @id @default(autoincrement())
+  nomor          String @db.VarChar(50)
+  judul          String @db.VarChar(100)
+  status         String @db.VarChar(1)
+  gambar         String @db.VarChar(50)
+  tgl_buat       String @db.VarChar(15)
+  pembuat        String @db.VarChar(50)
+  tgl_modifikasi String @db.VarChar(15)
+  pengubah       String @db.VarChar(50)
+}
+
+model tb_berita {
+  id             Int     @id @default(autoincrement())
+  judul          String  @db.VarChar(255)
+  isi            String  @db.Text
+  gambar_1       String  @db.VarChar(35)
+  gambar_2       String  @db.VarChar(35)
+  gambar_3       String  @db.VarChar(35)
+  gambar_4       String  @db.VarChar(35)
+  gambar_5       String  @db.VarChar(35)
+  pembuat        String  @db.VarChar(35)
+  tgl_buat       String  @db.VarChar(35)
+  pengubah       String  @db.VarChar(35)
+  tgl_modifikasi String  @db.VarChar(35)
+  nomor          String  @db.VarChar(35)
+  slug           String? @db.Text
+}
+
+model tb_bidang_hukum {
+  id             Int    @id @default(autoincrement())
+  nama           String @db.VarChar(100)
+  urutan         Int
+  tgl_buat       String @db.VarChar(15)
+  pembuat        String @db.VarChar(35)
+  tgl_modifikasi String @db.VarChar(15)
+  pengubah       String @db.VarChar(35)
+}
+
+model tb_data_login {
+  id       Int     @id @default(autoincrement())
+  username String? @db.VarChar(100)
+  email    String? @db.VarChar(250)
+  fullname String? @db.VarChar(250)
+  grup     String? @db.VarChar(250)
+  unor     String? @db.VarChar(250)
+}
+
+model tb_data_pendukung {
+  id                     Int     @id @default(autoincrement())
+  id_detail_produk_hukum Int?
+  file                   String? @db.Text
+  keterangan             String? @db.Text
+  tgl_buat               String? @db.VarChar(15)
+  pembuat                String? @db.VarChar(35)
+  tgl_modifikasi         String? @db.VarChar(15)
+  pengubah               String? @db.VarChar(35)
+}
+
+model tb_dokumentasi_puu {
+  id                    Int     @id @default(autoincrement())
+  variable              String? @db.Text
+  pemenuhan_data_dukung Int?
+  bobot                 Int?
+  tgl_buat              String? @db.VarChar(15)
+  pembuat               String? @db.VarChar(35)
+  tgl_modifikasi        String? @db.VarChar(15)
+  pengubah              String? @db.VarChar(35)
+}
+
+model tb_dokumentasi_puu_detail {
+  id                  Int                                @id @default(autoincrement())
+  id_dokumen_puu      Int?
+  daftar_produk_hukum String?                            @db.Text
+  capaian             tb_dokumentasi_puu_detail_capaian? @default(dbgenerated("0"))
+  tgl_buat            String?                            @db.VarChar(15)
+  pembuat             String?                            @db.VarChar(35)
+  tgl_modifikasi      String?                            @db.VarChar(15)
+  pengubah            String?                            @db.VarChar(35)
+  id_peraturan        Int?
+  tipe                tb_dokumentasi_puu_detail_tipe?    @default(dbgenerated("0"))
+}
+
+model tb_dokumentasi_puu_detail_produk_hukum {
+  id                    Int                                                     @id @default(autoincrement())
+  id_dokumen_puu_detail Int?
+  produk_hukum          String?                                                 @db.Text
+  status                tb_dokumentasi_puu_detail_produk_hukum_status?          @default(dbgenerated("0"))
+  tgl_buat              String?                                                 @db.VarChar(15)
+  pembuat               String?                                                 @db.VarChar(35)
+  tgl_modifikasi        String?                                                 @db.VarChar(15)
+  pengubah              String?                                                 @db.VarChar(35)
+  approval_id           String?                                                 @db.VarChar(255)
+  approval_status       tb_dokumentasi_puu_detail_produk_hukum_approval_status? @default(N)
+  approval_keterangan   String?                                                 @db.Text
+  approval_tgl          String?                                                 @db.VarChar(35)
+}
+
+model tb_email_template {
+  id_email_template String @id @db.VarChar(35)
+  subject           String @db.VarChar(200)
+  body_email        String @db.Text
+  date_time_create  String @db.VarChar(15)
+  usage_type        String @db.VarChar(2)
+  status            String @db.VarChar(2)
+  last_modified_by  String @db.VarChar(50)
+  last_modified     String @db.VarChar(15)
+  gambar            String @db.VarChar(35)
+}
+
+model tb_favorit {
+  id           Int     @id @default(autoincrement())
+  peraturan_id String? @db.VarChar(25)
+  session_id   String? @db.VarChar(255)
+}
+
+model tb_form {
+  id        Int    @id @default(autoincrement())
+  f_kode    String @db.VarChar(25)
+  nama_form String @db.VarChar(50)
+  tipe      String @db.VarChar(1)
+  induk     String @db.VarChar(25)
+  reserve_1 String @db.VarChar(50)
+}
+
+model tb_form_bak {
+  id        Int    @id @default(autoincrement())
+  f_kode    String @db.VarChar(25)
+  nama_form String @db.VarChar(50)
+  tipe      String @db.VarChar(1)
+  induk     String @db.VarChar(25)
+  reserve_1 String @db.VarChar(50)
+}
+
+model tb_group_user {
+  id             Int    @id @default(autoincrement())
+  nama           String @db.VarChar(255)
+  pembuat        String @db.VarChar(50)
+  tgl_buat       String @db.VarChar(15)
+  pengubah       String @db.VarChar(50)
+  tgl_modifikasi String @db.VarChar(15)
+}
+
+model tb_hak_akses {
+  id      Int    @id @default(autoincrement())
+  user_id String @db.VarChar(80)
+  f_kode  String @db.VarChar(25)
+  lihat   String @db.VarChar(5)
+  tambah  String @db.VarChar(5)
+  ubah    String @db.VarChar(5)
+  hapus   String @db.VarChar(5)
+}
+
+model tb_history_login {
+  id         Int    @id @default(autoincrement())
+  tgl_awal   String @db.VarChar(35)
+  tgl_tambah String @db.VarChar(15)
+  tgl_akhir  String @db.VarChar(35)
+  sess_id    String @db.VarChar(35)
+}
+
+model tb_hit_date {
+  id    BigInt    @id @default(autoincrement())
+  waktu DateTime? @db.Date
+  jml   BigInt?
+}
+
+model tb_hit_stat {
+  id      Int    @id @default(autoincrement())
+  tgl     String @db.VarChar(15)
+  form    String @db.VarChar(100)
+  ip      String @db.VarChar(35)
+  hit     Int
+  session String @db.VarChar(255)
+  waktu   String @db.VarChar(100)
+}
+
+model tb_hit_total {
+  id    Int   @id @default(autoincrement())
+  total Float
+}
+
+model tb_icon {
+  id   BigInt  @id @default(autoincrement())
+  nama String? @db.VarChar(150)
+}
+
+model tb_infografis {
+  id             BigInt @id @default(autoincrement())
+  judul          String @db.VarChar(255)
+  isi            String @db.Text
+  gambar_1       String @db.VarChar(35)
+  gambar_2       String @db.VarChar(35)
+  gambar_3       String @db.VarChar(35)
+  gambar_4       String @db.VarChar(35)
+  gambar_5       String @db.VarChar(35)
+  pembuat        String @db.VarChar(35)
+  tgl_buat       String @db.VarChar(35)
+  pengubah       String @db.VarChar(35)
+  tgl_modifikasi String @db.VarChar(35)
+  nomor          String @db.VarChar(35)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model tb_izin_pemrakarsa {
+  id             BigInt @id @default(autoincrement())
+  nama_usulan    String @db.Text
+  pengusul       String @db.Text
+  tahun          Int
+  noperaturan    String @db.Text
+  kondisi        String @db.Char(1)
+  approval       String @db.Char(1)
+  tgl_buat       String @db.VarChar(15)
+  pembuat        String @db.VarChar(50)
+  tgl_modifikasi String @db.VarChar(15)
+  pengubah       String @db.VarChar(50)
+}
+
+model tb_izin_pemrakarsa_data {
+  id               BigInt @id @default(autoincrement())
+  id_proleg_detail Float
+  nomor            String @db.Text
+  tanggal          String @db.VarChar(20)
+  file             String @db.Text
+  kegiatan         String @db.Text
+  instansi_terkait String @db.VarChar(200)
+  progres          Int
+  tgl_buat         String @db.VarChar(15)
+  pembuat          String @db.VarChar(50)
+  tgl_modifikasi   String @db.VarChar(15)
+  pengubah         String @db.VarChar(50)
+}
+
+model tb_izin_pemrakarsa_detail {
+  id                    BigInt @id @default(autoincrement())
+  id_proleg             Float
+  capaian               String @db.VarChar(10)
+  nomor                 String @db.Text
+  kriteria_keberhasilan String @db.Text
+  ukuran_keberhasilan   String @db.Text
+  target_capaian        String @db.Text
+  progres               Int
+  tgl_buat              String @db.VarChar(15)
+  pembuat               String @db.VarChar(50)
+  tgl_modifikasi        String @db.VarChar(15)
+  pengubah              String @db.VarChar(50)
+}
+
+model tb_izin_pemrakarsa_kriteria {
+  id        BigInt @id @default(autoincrement())
+  id_proleg Float
+  jenis     String @db.VarChar(10)
+  kriteria  String @db.VarChar(100)
+  status    String @db.Char(1)
+}
+
+model tb_konfig_email {
+  nama_host       String @db.VarChar(25)
+  host_user_name  String @db.VarChar(50)
+  host_password   String @db.VarChar(25)
+  email_from      String @db.VarChar(50)
+  email_from_name String @db.VarChar(50)
+  tgl_modifikasi  String @db.VarChar(15)
+  id              Int    @id @default(autoincrement())
+}
+
+model tb_konsultasi_publik {
+  id            Int       @id @default(autoincrement())
+  judul         String?   @db.VarChar(255)
+  pokok_pikiran String?   @db.Text
+  pembuat       String?   @db.VarChar(50)
+  tgl_buat      DateTime  @default(now()) @db.DateTime(0)
+  durasi        DateTime? @db.Date
+}
+
+model tb_konsultasi_publik_durasi {
+  id       Int     @id @default(autoincrement())
+  durasi   Int?
+  pembuat  String? @db.VarChar(255)
+  tgl_buat String? @db.VarChar(255)
+}
+
+model tb_konsultasi_publik_file {
+  id                   Int     @id @default(autoincrement())
+  id_konsultasi_publik Int?
+  file                 String? @db.Text
+  keterangan           String? @db.Text
+  tgl_buat             String? @db.VarChar(15)
+  pembuat              String? @db.VarChar(35)
+  tgl_modifikasi       String? @db.VarChar(15)
+  pengubah             String? @db.VarChar(35)
+}
+
+model tb_konsultasi_publik_komentar {
+  id                   Int      @id @default(autoincrement())
+  komentar             String?  @db.Text
+  nama                 String?  @db.VarChar(45)
+  email                String?  @db.VarChar(45)
+  tgl_buat             DateTime @default(now()) @db.Timestamp(0)
+  status               Boolean  @default(false)
+  konsultasi_publik_id String?  @db.VarChar(225)
+  parent_id            String?  @db.VarChar(225)
+}
+
+model tb_log {
+  id                 BigInt @id @default(autoincrement())
+  modul              String @db.VarChar(50)
+  act                String @db.VarChar(35)
+  tgl                String @db.VarChar(15)
+  user_id            String @db.VarChar(50)
+  keterangan         String @db.Text
+  jenis              String @db.VarChar(15)
+  nomor              String @db.VarChar(50)
+  peraturan_category String @db.VarChar(50)
+  peraturan_dept_id  String @db.VarChar(50)
+}
+
+model tb_login_session {
+  id        BigInt  @id @default(autoincrement())
+  sess_id   String? @db.VarChar(100)
+  sess_nama String? @db.VarChar(120)
+  group_id  String? @db.VarChar(15)
+  unor      String? @db.VarChar(25)
+  dept_id   String? @db.VarChar(25)
+  tgl       String? @db.VarChar(20)
+  reserve1  String? @db.VarChar(100)
+  reserve2  String? @db.VarChar(100)
+}
+
+model tb_notification {
+  id           BigInt  @id @default(autoincrement())
+  judul_data   String? @db.Text
+  status_read  String? @db.VarChar(3)
+  keterangan   String? @db.Text
+  menu         String? @db.Text
+  tipe         String? @db.VarChar(50)
+  id_data      String? @db.VarChar(255)
+  created_at   String? @db.VarChar(50)
+  header_notif String? @db.Text
+  user_id      String? @db.VarChar(50)
+}
+
+model tb_online {
+  id      Int    @id @default(autoincrement())
+  ip      String @db.VarChar(25)
+  session String @db.VarChar(100)
+  waktu   Int
+}
+
+model tb_otp {
+  id       BigInt @id @default(autoincrement())
+  user_id  String @db.VarChar(50)
+  email    String @db.VarChar(255)
+  otp      String @db.VarChar(5)
+  tgl_buat String @db.VarChar(15)
+  tgl_exp  String @db.VarChar(15)
+  status   String @db.VarChar(1)
+}
+
+model tb_peraturan_terkait {
+  id                BigInt @id @default(autoincrement())
+  id_peraturan      Float
+  peraturan_terkait Int
+  tgl_buat          String @db.VarChar(35)
+  pembuat           String @db.VarChar(35)
+  tgl_modifikasi    String @db.VarChar(35)
+  pengubah          String @db.VarChar(35)
+}
+
+model tb_produk_hukum {
+  id             Int     @id @default(autoincrement())
+  produk_hukum   String? @db.Text
+  tgl_buat       String? @db.VarChar(15)
+  pembuat        String? @db.VarChar(35)
+  tgl_modifikasi String? @db.VarChar(15)
+  pengubah       String? @db.VarChar(35)
+}
+
+model tb_progres_monitoring {
+  id_progres     Int     @id @default(autoincrement())
+  tanggal        String? @db.VarChar(255)
+  kegiatan       String? @db.VarChar(255)
+  instansi       String? @db.VarChar(255)
+  data_pendukung String? @db.VarChar(255)
+  tipe           String? @db.VarChar(255)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model tb_proleg {
+  id             BigInt @id @default(autoincrement())
+  nama_usulan    String @db.Text
+  pengusul       String @db.Text
+  tahun          Int
+  noperaturan    String @db.Text
+  kondisi        String @db.Char(1)
+  approval       String @db.Char(1)
+  tgl_buat       String @db.VarChar(15)
+  pembuat        String @db.VarChar(50)
+  tgl_modifikasi String @db.VarChar(15)
+  pengubah       String @db.VarChar(50)
+}
+
+model tb_proleg_data {
+  id               BigInt  @id @default(autoincrement())
+  id_proleg_detail Float
+  nomor            String  @db.Text
+  tanggal          String  @db.VarChar(20)
+  file             String  @db.Text
+  kegiatan         String  @db.Text
+  judul_kegiatan   String? @db.VarChar(255)
+  instansi_terkait String  @db.VarChar(200)
+  progres          Int
+  tgl_buat         String  @db.VarChar(15)
+  pembuat          String  @db.VarChar(50)
+  tgl_modifikasi   String  @db.VarChar(15)
+  pengubah         String  @db.VarChar(50)
+}
+
+model tb_proleg_detail {
+  id                    BigInt @id @default(autoincrement())
+  id_proleg             Float
+  capaian               String @db.VarChar(10)
+  nomor                 String @db.Text
+  kriteria_keberhasilan String @db.Text
+  ukuran_keberhasilan   String @db.Text
+  target_capaian        String @db.Text
+  progres               Int
+  tgl_buat              String @db.VarChar(15)
+  pembuat               String @db.VarChar(50)
+  tgl_modifikasi        String @db.VarChar(15)
+  pengubah              String @db.VarChar(50)
+}
+
+model tb_proleg_kriteria {
+  id        BigInt @id @default(autoincrement())
+  id_proleg Float
+  jenis     String @db.VarChar(10)
+  kriteria  String @db.VarChar(100)
+  status    String @db.Char(1)
+}
+
+model tb_rating {
+  id        Int    @id @default(autoincrement())
+  nama      String @db.VarChar(100)
+  email     String @db.VarChar(100)
+  deskripsi String @db.VarChar(100)
+  rating    Int
+  tanggal   String @db.VarChar(15)
+}
+
+model tb_recaptcha {
+  id         Int     @id @default(autoincrement())
+  key_secret String? @db.VarChar(50)
+  sitekey    String? @db.VarChar(50)
+}
+
+model tb_send_email {
+  id              BigInt @id @default(autoincrement())
+  date_time       String @db.VarChar(15)
+  recipient       String @db.VarChar(255)
+  cc              String @db.VarChar(255)
+  email_type      String @db.VarChar(15)
+  subject_mail    String @db.VarChar(255)
+  delivery_status String @db.VarChar(50)
+}
+
+model tb_session {
+  id        BigInt  @id @default(autoincrement())
+  ip        String  @db.VarChar(30)
+  sess_id   String  @db.VarChar(100)
+  sess_nama String? @db.VarChar(100)
+  tgl_login String  @db.VarChar(15)
+  session   String  @db.VarChar(255)
+  waktu     String  @db.VarChar(15)
+}
+
+model tb_sk {
+  id           Int     @id @default(autoincrement())
+  peraturan_id Int?
+  tanggal      String? @db.VarChar(255)
+  tipe         String? @db.VarChar(50)
+  nama         String? @db.VarChar(255)
+  email        String? @db.VarChar(255)
+  komentar     String? @db.MediumText
+  berkas       String? @db.VarChar(50)
+}
+
+model tb_subscribe {
+  id       Int     @id @default(autoincrement())
+  email    String? @db.VarChar(100)
+  nama     String? @db.VarChar(100)
+  tgl_buat String? @db.VarChar(25)
+  status   String? @db.VarChar(1)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model tb_tu_menteri {
+  id                 BigInt @id @default(autoincrement())
+  jenis_produk_hukum Int
+  noperaturan        String @db.Text
+  tentang            String @db.Text
+  pemrakarsa         Int
+  status             String @db.Char(1)
+  tipe               String @db.Char(1)
+  tgl_buat           String @db.VarChar(20)
+  pembuat            String @db.VarChar(50)
+  tgl_modifikasi     String @db.VarChar(20)
+  pengubah           String @db.VarChar(50)
+}
+
+enum ppj_peraturan_tipe_dokumen {
+  TYPE_1 @map("1")
+  TYPE_2 @map("2")
+  TYPE_3 @map("3")
+  TYPE_4 @map("4")
+}
+
+enum tb_dokumentasi_puu_detail_capaian {
+  TYPE_0 @map("0")
+  TYPE_1 @map("1")
+}
+
+enum tb_dokumentasi_puu_detail_produk_hukum_status {
+  TYPE_0 @map("0")
+  TYPE_1 @map("1")
+  TYPE_2 @map("2")
+  TYPE_3 @map("3")
+}
+
+enum ppj_peraturan_category_percategorykondisi {
+  TYPE_0 @map("0")
+  TYPE_1 @map("1")
+}
+
+enum ppj_users_status {
+  TYPE_0 @map("0")
+  TYPE_1 @map("1")
+  TYPE_2 @map("2")
+  TYPE_3 @map("3")
+}
+
+enum tb_dokumentasi_puu_detail_tipe {
+  TYPE_1 @map("1")
+  TYPE_2 @map("2")
+  TYPE_3 @map("3")
+  TYPE_4 @map("4")
+  TYPE_5 @map("5")
+  TYPE_0 @map("0")
+}
+
+enum tb_dokumentasi_puu_detail_produk_hukum_approval_status {
+  N
+  Y
+  R
+}
+
+enum ppj_peraturan_category_tipe {
+  TYPE_1 @map("1")
+  TYPE_2 @map("2")
+  TYPE_3 @map("3")
+  TYPE_4 @map("4")
+}
+
+enum ppj_peraturan_kondisi {
+  TYPE_0 @map("0")
+  TYPE_1 @map("1")
+  TYPE_2 @map("2")
+  TYPE_3 @map("3")
+  TYPE_4 @map("4")
+  TYPE_5 @map("5")
+  TYPE_6 @map("6")
+  TYPE_7 @map("7")
+}
+
+enum ppj_peraturan_status {
+  TYPE_0 @map("0")
+  TYPE_1 @map("1")
+  TYPE_2 @map("2")
+  TYPE_3 @map("3")
+  TYPE_4 @map("4")
+  TYPE_5 @map("5")
+  TYPE_6 @map("6")
+  TYPE_7 @map("7")
+}
+
+enum ppj_peraturan_sifat {
+  TYPE_0 @map("0")
+  TYPE_1 @map("1")
+  TYPE_2 @map("2")
+}
+
+enum ppj_users_jenis {
+  jdih
+  ehrm
 }
