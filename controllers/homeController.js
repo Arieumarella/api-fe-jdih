@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 exports.getNuwPeraturan = async (req, res) => {
     try {
     
-    const qry = "SELECT judul,slug, download_count,tanggal, status,if(a.file_abstrak = '', false, CONCAT('https://jdih.pu.go.id/internal/assets/assets/produk_abstrak/', b.percategorycode,'/',left(tanggal,4),'/', mid(tanggal,5,2), '/', a.file_abstrak)) as path_abstrak, CONCAT('internal/assets/assets/produk/', b.percategorycode,'/',left(tanggal,4),'/', mid(tanggal,5,2), '/', a.file_upload) as path_file   from (SELECT * from ppj_peraturan where tipe_dokumen=1 AND (sifat=1 or sifat is null) and approval_2 ) as a LEFT JOIN (SELECT * FROM ppj_peraturan_category)  as b on a.peraturan_category_id=b.peraturan_category_id order by a.peraturan_id DESC LIMIT 5";
+    const qry = "SELECT judul,slug, download_count,tanggal, status,if(a.file_abstrak = '', false, CONCAT('https://jdih.pu.go.id/internal/assets/assets/produk_abstrak/', b.percategorycode,'/',left(tanggal,4),'/', mid(tanggal,5,2), '/', a.file_abstrak)) as path_abstrak, CONCAT('https://jdih.pu.go.id/internal/assets/assets/produk/', b.percategorycode,'/',left(tanggal,4),'/', mid(tanggal,5,2), '/', a.file_upload) as path_file, a.file_upload from (SELECT * from ppj_peraturan where tipe_dokumen=1 AND (sifat=1 or sifat is null) and approval_2 ) as a LEFT JOIN (SELECT * FROM ppj_peraturan_category)  as b on a.peraturan_category_id=b.peraturan_category_id order by a.peraturan_id DESC LIMIT 5";
     
     const dataPeraturan = await prisma.$queryRawUnsafe(qry);
 
@@ -98,12 +98,22 @@ exports.getLinkTerkait = async (req, res) => {
 exports.getKurvaPengunjung = async (req, res) => {
     try {
 
-        const qry = "SELECT * FROM tb_hit_date WHERE waktu BETWEEN CURDATE() - INTERVAL 7 DAY AND CURDATE() ORDER BY waktu asc";
+        const qry = "SELECT waktu as name, jml as Pengunjung FROM tb_hit_date WHERE waktu BETWEEN CURDATE() - INTERVAL 7 DAY AND CURDATE() ORDER BY waktu asc";
         const data = await prisma.$queryRawUnsafe(qry);
+
+        // Ubah semua BigInt ke String
+        const formattedData = data.map(row => {
+            return Object.fromEntries(
+                Object.entries(row).map(([key, value]) => [
+                    key,
+                    typeof value === 'bigint' ? value.toString() : value
+                ])
+            );
+        });
 
         return res.status(200).json({
             status: true,
-            data: data
+            data: formattedData
         });
 
     }
