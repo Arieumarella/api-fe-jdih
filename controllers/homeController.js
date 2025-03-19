@@ -98,7 +98,7 @@ exports.getLinkTerkait = async (req, res) => {
 exports.getKurvaPengunjung = async (req, res) => {
     try {
 
-        const qry = "SELECT waktu as name, jml as Pengunjung FROM tb_hit_date WHERE waktu BETWEEN CURDATE() - INTERVAL 7 DAY AND CURDATE() ORDER BY waktu asc";
+        const qry = "SELECT  CASE DAYOFWEEK(waktu) WHEN 1 THEN 'Minggu' WHEN 2 THEN 'Senin' WHEN 3 THEN 'Selasa' WHEN 4 THEN 'Rabu' WHEN 5 THEN 'Kamis' WHEN 6 THEN 'Jumat' WHEN 7 THEN 'Sabtu' END AS name, jml as Pengunjung FROM tb_hit_date WHERE waktu BETWEEN CURDATE() - INTERVAL 7 DAY AND CURDATE() ORDER BY waktu asc";
         const data = await prisma.$queryRawUnsafe(qry);
 
         // Ubah semua BigInt ke String
