@@ -182,7 +182,7 @@ exports.getDataMonografi = async (req, res) => {
         const qry = `SELECT 
             peraturan_id, 
             judul,
-            CONCAT('https://jdih.pu.go.id/internal/assets/assets/produk/monografi/BukuHukum/2023/11/', percategorycode, '/', LEFT(tanggal,4), '/11/', file_upload) AS path_file,
+            CONCAT('https://jdih.pu.go.id/internal/assets/assets/produk/monografi/', percategorycode, '/', LEFT(tanggal,4), '/11/', file_upload) AS path_file,
             a.slug
             FROM (SELECT * FROM ppj_peraturan WHERE tipe_dokumen=2 AND kondisi='3') AS a
             LEFT JOIN (SELECT * FROM ppj_peraturan_category) AS b ON a.peraturan_category_id=b.peraturan_category_id ORDER BY tanggal desc`;
