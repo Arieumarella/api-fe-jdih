@@ -5,7 +5,6 @@ const dayjs = require("dayjs");
 exports.getDetailMonografi = async (req, res) => {
     try {
         const dataPost = req.body;
-
         const data = await prisma.ppj_peraturan.findFirst({
             where: {
               slug: dataPost.slug,
