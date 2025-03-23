@@ -17,10 +17,11 @@ app.use(express.urlencoded({ extended: true }));
 // Router
 const homeRouter = require("./routes/homeRouter.js");
 const BelanggananDanKepuasanMasyarakatRouter = require("./routes/BelanggananDanKepuasanMasyarakatRouter.js");
+const monografiRouter = require("./routes/monografiRouter.js");
 
 app.use(homeRouter);
 app.use(BelanggananDanKepuasanMasyarakatRouter);
-
+app.use(monografiRouter);
 
 // Menjalankan server Express.js
 app.listen(port, () => {

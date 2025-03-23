@@ -60,11 +60,18 @@ exports.postRating = async (req, res) => {
         const dataPost = req.body;
         const dateNow = dayjs().format("DD/MM/YYYY");
 
+        if (!dataPost.nama || !dataPost.email || !dataPost.saran || !dataPost.rating) {
+            return res.status(400).json({
+                status: false,
+                msg: "Data tidak lengkap."
+            });
+        }
+
         const insertRating = {
             'nama' : dataPost.nama,
             'email' : dataPost.email,
             'deskripsi' : dataPost.saran,
-            'rating' : dataPost.rating,
+            'rating' : parseFloat(dataPost.rating),
             'tanggal' : dateNow
         }
 
@@ -82,6 +89,55 @@ exports.postRating = async (req, res) => {
             return res.status(401).json({
                 status: true,
                 msg: "Data Rating Gagal disimpan."
+            });
+        }
+
+    }
+    catch (error) {
+        
+        console.log(error); 
+        return res.status(500).json({
+            status: false,
+            message: error
+        })
+    
+    }
+}
+
+exports.postLangganan = async (req, res) => {
+    try {
+
+        const dataPost = req.body;
+        const dateNow = dayjs().format("DD/MM/YYYY");
+
+        if (!dataPost.email || !dataPost.nama) {
+            return res.status(400).json({
+                status: false,
+                msg: "Data tidak lengkap."
+            });
+        }
+
+        const insertLangganan = {
+            'email' : dataPost.email,
+            'nama' : dataPost.nama,
+            'tgl_buat' : dateNow,
+            'status' : "0"
+        }
+
+        const result = await prisma.tb_subscribe.create({
+            data: insertLangganan
+        });
+        
+        
+        if (result) {
+            return res.status(200).json({
+                status: true,
+                msg: "Data Langganan Berhasil disimpan."
+            });
+        } else {
+            return res.status(401).json({
+                status: true,
+                msg: "Data Langganan Gagal disimpan."
             });
         }
 

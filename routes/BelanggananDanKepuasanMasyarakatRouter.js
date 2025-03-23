@@ -4,5 +4,6 @@ BelanggananDanKepuasanMasyarakatController = require("../controllers/Belangganan
 
 router.route('/footer/getDataRating').get(BelanggananDanKepuasanMasyarakatController.getDataRating);
 router.route('/footer/postRating').post(BelanggananDanKepuasanMasyarakatController.postRating);
+router.route('/footer/postLangganan').post(BelanggananDanKepuasanMasyarakatController.postLangganan);
 
 module.exports = router;
