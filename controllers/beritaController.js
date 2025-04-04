@@ -26,7 +26,8 @@ exports.getDetailBerita = async (req, res) => {
 
 exports.getPagination = async (req, res) => {
     try {
-        const dataPost = await req.body;
+        const dataPost = await req.body,
+        search = await dataPost.search !== undefined ? dataPost.search.toLowerCase() : "";
 
         let page = 1,
         limit = 6;
@@ -41,9 +42,16 @@ exports.getPagination = async (req, res) => {
             skip,
             take: limit,
             orderBy: { id: "desc" },
+            where: {
+                judul: {
+                  contains: search
+                },
+              },
           });
       
-        const totalPosts = await prisma.tb_berita.count();
+        const totalPosts = await prisma.tb_berita.count({
+            where: search ? { judul: { contains: search } } : {},
+        });
       
 
         return res.status(200).json({
