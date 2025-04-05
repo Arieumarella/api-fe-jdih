@@ -1,8 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const dayjs = require("dayjs");
 
-exports.getDetailMonografi = async (req, res) => {
+exports.getDetail = async (req, res) => {
   try {
     const dataPost = req.body;
     const data = await prisma.ppj_peraturan.findFirst({
@@ -24,7 +23,7 @@ exports.getDetailMonografi = async (req, res) => {
   }
 };
 
-exports.getPaginationMonografi = async (req, res) => {
+exports.getPaginationPutusan = async (req, res) => {
   try {
     const dataPost = await req.body,
       search =
@@ -47,7 +46,7 @@ exports.getPaginationMonografi = async (req, res) => {
       orderBy: { peraturan_id: "desc" },
       where: {
         AND: [
-          { tipe_dokumen: "TYPE_2" },
+          { tipe_dokumen: "TYPE_4" },
           { kondisi: "TYPE_3" },
           search ? { judul: { contains: search } } : {},
         ],
@@ -57,7 +56,7 @@ exports.getPaginationMonografi = async (req, res) => {
     const totalPosts = await prisma.ppj_peraturan.count({
       where: {
         AND: [
-          { tipe_dokumen: "TYPE_2" },
+          { tipe_dokumen: "TYPE_4" },
           { kondisi: "TYPE_3" },
           search ? { judul: { contains: search } } : {},
         ],
