@@ -21,12 +21,16 @@ const BelanggananDanKepuasanMasyarakatRouter = require("./routes/BelanggananDanK
 const monografiRouter = require("./routes/monografiRouter.js");
 const beritaRouter = require("./routes/beritaRouter.js");
 const putusanRouter = require("./routes/putusanRouter.js");
+const agendaRouter = require("./routes/agendaRouter.js");
+const artikelRouter = require("./routes/artikelRouter.js");
 
 app.use(homeRouter);
 app.use(BelanggananDanKepuasanMasyarakatRouter);
 app.use(monografiRouter);
 app.use(beritaRouter);
 app.use(putusanRouter);
+app.use(agendaRouter);
+app.use(artikelRouter);
 
 // Menjalankan server Express.js
 app.listen(port, () => {
