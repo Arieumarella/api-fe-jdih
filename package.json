@@ -11,6 +11,7 @@
   "license": "ISC",
   "description": "ini adalah api jadih pu font-end",
   "dependencies": {
+    "@elastic/elasticsearch": "^8.17.1",
     "@prisma/client": "^6.5.0",
     "cors": "^2.8.5",
     "dayjs": "^1.11.13",
