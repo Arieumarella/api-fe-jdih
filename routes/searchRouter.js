@@ -14,4 +14,8 @@ router
   .route("/search/getDataPeraturan")
   .post(searchController.getDataPeraturan);
 
+router
+  .route("/search/getDetailPeraturan")
+  .post(searchController.getDataDetailPeraturan);
+
 module.exports = router;
