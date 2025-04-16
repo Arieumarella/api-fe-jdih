@@ -18,4 +18,10 @@ router
   .route("/search/getDetailPeraturan")
   .post(searchController.getDataDetailPeraturan);
 
+router
+  .route("/search/postMasukanDanKriting")
+  .post(searchController.postMasukanDanKriting);
+
+router.route("/search/getUnor").get(searchController.getUnitOrganisasi);
+
 module.exports = router;

@@ -61,11 +61,10 @@ exports.getDataPeraturan = async (req, res) => {
       length = limit,
       judul = req.body.search.judul,
       peraturan_category_id = req.body.search.peraturan_category_id,
-      jns_substansi = req.body.search.jns_substansi;
-    (nomor = req.body.search.nomor),
-      (tahun = req.body.search.tahun),
-      (nomorPeraturan = req.body.search.nomorPeraturan),
-      (tglPeraturan = req.body.search.tglPeraturan);
+      jns_substansi = req.body.search.jns_substansi,
+      nomor = req.body.search.nomor,
+      tahun = req.body.search.tahun,
+      unor = req.body.search.unor;
 
     const mustClauses = [];
     const shouldClauses = [];
@@ -91,6 +90,10 @@ exports.getDataPeraturan = async (req, res) => {
 
     if (tahun) {
       shouldClauses.push({ term: { tahun: tahun } });
+    }
+
+    if (unor) {
+      shouldClauses.push({ term: { dept_id: parseInt(unor) } });
     }
 
     const params = {
@@ -229,16 +232,66 @@ exports.getDataDetailPeraturan = async (req, res) => {
       },
       orderBy: {
         id: "asc",
-      }
+      },
     });
-
 
     return res.status(200).json({
       status: true,
       data: data,
       dataCategory: dataCatgori,
       daraLogPeraturan: dataLogPeraturan,
-      dataFileParsial: dataFileParsial
+      dataFileParsial: dataFileParsial,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: false,
+      message: error,
+    });
+  }
+};
+
+exports.postMasukanDanKriting = async (req, res) => {
+  try {
+    const dataPost = await req.body;
+
+    const insertKritik = {
+      peraturan_id: parseInt(dataPost.peraturan_id),
+      tanggal: getCurrentDateFormatted(),
+      tipe: "1",
+      nama: dataPost.nama,
+      email: dataPost.email,
+      komentar: dataPost.saran,
+      berkas: "",
+    };
+
+    const result = await prisma.tb_sk.create({
+      data: insertKritik,
+    });
+
+    return res.status(200).json({
+      status: true,
+      msg: result,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: false,
+      message: error,
+    });
+  }
+};
+
+exports.getUnitOrganisasi = async (req, res) => {
+  try {
+    const qry =
+      "select deptname,dept_id from ppj_departemen where parent_id='0' AND parent_id <> '10' AND dept_id <> '10' order by ppj_departemen.order ASC";
+
+    const data = await prisma.$queryRawUnsafe(qry);
+
+    return res.status(200).json({
+      status: true,
+      data: data,
     });
   } catch (error) {
     console.log(error);
@@ -263,3 +316,12 @@ function formatRelativeDate(yyyymmdd) {
 
   return `${diffInMonths} bulan yang lalu`;
 }
+
+const getCurrentDateFormatted = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0"); // bulan dari 0-11
+  const day = String(now.getDate()).padStart(2, "0");
+
+  return `${year}${month}${day}`;
+};
