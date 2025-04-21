@@ -29,6 +29,7 @@ const kontakKamiRouter = require("./routes/kontakKamiRouter.js");
 const headerRouter = require("./routes/headerRouter.js");
 const searchRouter = require("./routes/searchRouter.js");
 const statistikRouter = require("./routes/statistikRouter.js");
+const SiMPeLRouter = require("./routes/SiMPeLRouter.js");
 
 app.use(homeRouter);
 app.use(BelanggananDanKepuasanMasyarakatRouter);
@@ -43,6 +44,7 @@ app.use(kontakKamiRouter);
 app.use(headerRouter);
 app.use(searchRouter);
 app.use(statistikRouter);
+app.use(SiMPeLRouter);
 
 // Menjalankan server Express.js
 app.listen(port, () => {
