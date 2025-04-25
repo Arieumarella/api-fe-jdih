@@ -30,6 +30,7 @@ const headerRouter = require("./routes/headerRouter.js");
 const searchRouter = require("./routes/searchRouter.js");
 const statistikRouter = require("./routes/statistikRouter.js");
 const SiMPeLRouter = require("./routes/SiMPeLRouter.js");
+const pengunjungJdih = require("./routes/pengunjungJdih.js");
 
 app.use(homeRouter);
 app.use(BelanggananDanKepuasanMasyarakatRouter);
@@ -45,6 +46,7 @@ app.use(headerRouter);
 app.use(searchRouter);
 app.use(statistikRouter);
 app.use(SiMPeLRouter);
+app.use(pengunjungJdih);
 
 // Menjalankan server Express.js
 app.listen(port, () => {
