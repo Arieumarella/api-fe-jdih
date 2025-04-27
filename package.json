@@ -12,11 +12,17 @@
   "description": "ini adalah api jadih pu font-end",
   "dependencies": {
     "@elastic/elasticsearch": "^8.17.1",
+    "@google/genai": "^0.10.0",
+    "@google/generative-ai": "^0.24.0",
     "@prisma/client": "^6.5.0",
+    "axios": "^1.9.0",
     "cors": "^2.8.5",
     "dayjs": "^1.11.13",
+    "dompurify": "^3.2.5",
+    "dotenv": "^16.5.0",
     "express": "^4.21.2",
     "nodemon": "^3.1.9",
-    "prisma": "^6.5.0"
+    "prisma": "^6.5.0",
+    "qs": "^6.14.0"
   }
 }
