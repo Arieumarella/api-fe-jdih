@@ -58,13 +58,17 @@ exports.getDataPeraturan = async (req, res) => {
     }
 
     let start = (page - 1) * limit,
-      length = limit,
-      judul = req.body.search.judul,
-      peraturan_category_id = req.body.search.peraturan_category_id,
-      jns_substansi = req.body.search.jns_substansi,
-      nomor = req.body.search.nomor,
-      tahun = req.body.search.tahun,
-      unor = req.body.search.unor;
+      length = await limit,
+      judul = await req.body.search.judul,
+      peraturan_category_id = await req.body.search.peraturan_category_id,
+      jns_substansi = await req.body.search.jns_substansi,
+      nomor = await req.body.search.nomor,
+      tahun = await req.body.search.tahun,
+      unor = await req.body.search.unor;
+
+      cekStr = await getCategoryId(judul);
+      
+      
 
     const mustClauses = [];
     const shouldClauses = [];
@@ -73,29 +77,59 @@ exports.getDataPeraturan = async (req, res) => {
       shouldClauses.push({ match: { judul: judul } });
       shouldClauses.push({ match: { keyword_search: judul } });
     }
-
+    
     if (peraturan_category_id) {
       shouldClauses.push({
-        term: { peraturan_category_id: peraturan_category_id },
+        term: {
+          peraturan_category_id: {
+            value: peraturan_category_id,
+            boost: 5, // Tingkatkan skor untuk kategori
+          },
+        },
       });
     }
 
+    if (cekStr) {
+      shouldClauses.push({
+        term: {
+          peraturan_category_id: {
+            value: cekStr,
+            boost: 5, // Tingkatkan skor untuk kategori
+          },
+        },
+      });
+    }
+    
     if (jns_substansi) {
       shouldClauses.push({ match: { tags: jns_substansi } });
     }
-
+    
     if (nomor) {
       shouldClauses.push({ match: { noperaturan: nomor } });
     }
-
+    
     if (tahun) {
-      shouldClauses.push({ term: { tahun: tahun } });
+      shouldClauses.push({
+        term: {
+          tahun: {
+            value: tahun,
+            boost: 5, // Misalnya boost sedang
+          },
+        },
+      });
     }
-
+    
     if (unor) {
-      shouldClauses.push({ term: { dept_id: parseInt(unor) } });
+      shouldClauses.push({
+        term: {
+          dept_id: {
+            value: parseInt(unor),
+            boost: 3, // Bisa disesuaikan
+          },
+        },
+      });
     }
-
+    
     const params = {
       index: "peraturan",
       body: {
@@ -110,9 +144,12 @@ exports.getDataPeraturan = async (req, res) => {
       },
     };
 
+    
+
     const response = await client.search(params);
     const hitsData = response.hits.hits;
     let statusBerlaku = "";
+    let statusPeraturan = "";
 
     const data = await Promise.all(
       hitsData.map(async (hit) => {
@@ -162,6 +199,11 @@ exports.getDataPeraturan = async (req, res) => {
             dataReal[0].status === "1"
               ? "Tidak Berlaku " + formatRelativeDate(dataReal[0].tanggal)
               : "Berlaku " + formatRelativeDate(dataReal[0].tanggal);
+
+              statusPeraturan =
+              dataReal[0].status === "1"
+                ? "Tidak Berlaku "
+                : "Berlaku ";
         }
 
         return {
@@ -170,6 +212,7 @@ exports.getDataPeraturan = async (req, res) => {
           dataRealPeraturan: dataReal,
           statusPeraturn: statusBerlaku,
           jnsPeraturan: jnsPeraturan?.[0]?.percategoryname,
+          statusPeraturan: statusPeraturan,
           pathAbstrak: `https://jdih.pu.go.id/internal/assets/assets/produk_abstrak/${
             dataCatgory[0].percategorycode
           }/${item.tanggal.slice(0, 4)}/${item.tanggal.slice(4, 6)}/${
@@ -325,3 +368,137 @@ const getCurrentDateFormatted = () => {
 
   return `${year}${month}${day}`;
 };
+
+function containsAnyKeyword(judul, keywordArray) {
+  if (!judul) return false;
+  const lowerJudul = judul.toLowerCase();
+  return keywordArray.some(keyword => lowerJudul.includes(keyword.toLowerCase()));
+}
+
+
+function getCategoryId(judul) {
+
+  const permenWord = ['peraturan menteri', "Peraturan Menteri", "permen", "Permen", "PERMEN"];
+  const uuWord = ['undang-undang', 'Undang-Undang', 'uu', 'UU', 'U.U.', 'u.u.'];
+  const ppWord = ['peraturan pemerintah', 'Peraturan Pemerintah', 'pp', 'PP', 'P.P.', 'p.p.'];
+  const perpresWord = ['peraturan presiden', 'Peraturan Presiden', 'perpres', 'Perpres', 'PRES', 'pres'];
+  const keppresWord = [
+    'keputusan presiden',
+    'Keputusan Presiden',
+    'keppres',
+    'Keppres',
+    'KEPPRES'
+  ];
+  const inpresWord = [
+    'instruksi presiden',
+    'Instruksi Presiden',
+    'inpres',
+    'Inpres',
+    'INPRES'
+  ];
+  const kepmenWord = [
+    'keputusan menteri',
+    'Keputusan Menteri',
+    'kepmen',
+    'Kepmen',
+    'KEPMEN'
+  ];
+  const seMenWord = [
+    'surat edaran menteri',
+    'Surat Edaran Menteri',
+    'se menteri',
+    'SE Menteri',
+    'SEMENTERI',
+    'semen'
+  ];
+  const inmenWord = [
+    'instruksi menteri',
+    'Instruksi Menteri',
+    'inmen',
+    'Inmen',
+    'INMEN'
+  ];
+  const kepSesjenWord = [
+    'keputusan sekertaris jenderal',
+    'Keputusan Sekertaris Jenderal',
+    'keputusan sesjen',
+    'Keputusan Sesjen',
+    'kepsesjen',
+    'KepSesjen',
+    'KEPSESJEN'
+  ];
+  const inSesjenWord = [
+    'instruksi sekertaris jenderal',
+    'Instruksi Sekertaris Jenderal',
+    'instruksi sesjen',
+    'Instruksi Sesjen',
+    'insesjen',
+    'InSesjen',
+    'INSESJEN'
+  ];
+
+  // ID kategori peraturan yang sesuai dengan masing-masing kategori
+  const categoryCodes = {
+    'UU': 1,
+    'Perpu': 2,
+    'PP': 3,
+    'Perpres': 4,
+    'Keppres': 5,
+    'Inpres': 6,
+    'PermenPUPR': 8,
+    'KepmenPUPR': 9,
+    'InmenPUPR': 10,
+    'SEMenteriPUPR': 11,
+    'SESekjenPUPR': 12,
+    'KepSekJen': 23,
+    'terjemahan': 54
+  };
+
+
+  if (containsAnyKeyword(judul, permenWord)) {
+    return categoryCodes['PermenPUPR'];
+  }
+
+  if (containsAnyKeyword(judul, uuWord)) {
+    return categoryCodes['UU'];
+  }
+
+  if (containsAnyKeyword(judul, ppWord)) {
+    return categoryCodes['PP'];
+  }
+
+  if (containsAnyKeyword(judul, perpresWord)) {
+    return categoryCodes['Perpres'];
+  }
+
+  if (containsAnyKeyword(judul, keppresWord)) {
+    return categoryCodes['Keppres'];
+  }
+
+  if (containsAnyKeyword(judul, inpresWord)) {
+    return categoryCodes['Inpres'];
+  }
+
+  if (containsAnyKeyword(judul, kepmenWord)) {
+    return categoryCodes['KepmenPUPR'];
+  }
+
+  if (containsAnyKeyword(judul, seMenWord)) {
+    return categoryCodes['SEMenteriPUPR'];
+  }
+
+  if (containsAnyKeyword(judul, inmenWord)) {
+    return categoryCodes['InmenPUPR'];
+  }
+
+  if (containsAnyKeyword(judul, kepSesjenWord)) {
+    return categoryCodes['SESekjenPUPR'];
+  }
+
+  if (containsAnyKeyword(judul, inSesjenWord)) {
+    return categoryCodes['KepSekJen'];
+  }
+
+  return null; // Tidak ditemukan kategori
+}
+
