@@ -72,3 +72,36 @@ exports.getPagination = async (req, res) => {
         });
     }
 }
+
+exports.insertviews = async (req, res) => {
+  try {
+    const dataPost = await req.body;
+    
+    let dataCatgory = await prisma.$queryRawUnsafe(
+          `SELECT views FROM tb_berita where slug="${dataPost.slug}"`
+        );
+
+    let jmlView = await dataCatgory[0].views == null ? 0 : Number(dataCatgory[0].views);
+
+    const data = await prisma.tb_berita.update({
+      where: {
+        slug: dataPost.slug,
+      },
+      data: {
+        views: jmlView + 1,
+      },
+    });
+    
+    
+    return res.status(200).json({
+      status: true,
+      message: "data berhasil diupdate",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: false,
+      message: error,
+    });
+  }
+};

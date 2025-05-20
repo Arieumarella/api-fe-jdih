@@ -135,7 +135,7 @@ model ppj_peraturan {
   nomor                   String                     @db.VarChar(100)
   link_url                String                     @db.VarChar(255)
   keyword                 String                     @db.Text
-  slug                    String?                    @db.Text
+  slug                    String?                    @unique
 
   @@index([dept_id], map: "fk_ppj_peraturan_ppj_departemen1_idx")
   @@index([peraturan_category_id], map: "fk_ppj_peraturan_ppj_peraturan_category1_idx")
@@ -472,7 +472,8 @@ model tb_berita {
   pengubah       String  @db.VarChar(35)
   tgl_modifikasi String  @db.VarChar(35)
   nomor          String  @db.VarChar(35)
-  slug           String? @db.Text
+  views          Float?  
+  slug           String? @unique
 }
 
 model tb_bidang_hukum {
@@ -647,6 +648,7 @@ model tb_infografis {
   pengubah       String @db.VarChar(35)
   tgl_modifikasi String @db.VarChar(35)
   nomor          String @db.VarChar(35)
+  viewr          Float?
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments

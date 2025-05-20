@@ -1,19 +1,31 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+const dayjs = require("dayjs");
 
-exports.getDetail = async (req, res) => {
+exports.getDetailInfografis = async (req, res) => {
   try {
-    const dataPost = req.body;
-    const data = await prisma.ppj_peraturan.findFirst({
+    const dataPost = await req.body;
+   
+    const dataX = await prisma.tb_infografis.findFirst({
       where: {
-        slug: dataPost.slug,
+        id: dataPost.id,
       },
     });
 
+    // Ubah semua BigInt ke String
+    const formattedData = Object.fromEntries(
+      Object.entries(dataX).map(([key, value]) => [
+        key,
+        value.toString(),
+      ])
+    );
+
+
     return res.status(200).json({
       status: true,
-      data: data,
+      data: formattedData,
     });
+
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -23,7 +35,7 @@ exports.getDetail = async (req, res) => {
   }
 };
 
-exports.getPaginationPutusan = async (req, res) => {
+exports.getPaginationInfografis = async (req, res) => {
   try {
     const dataPost = await req.body,
       search =
@@ -40,24 +52,30 @@ exports.getPaginationPutusan = async (req, res) => {
 
     const skip = (await (page - 1)) * limit;
 
-    const posts = await prisma.ppj_peraturan.findMany({
+    const posts = await prisma.tb_infografis.findMany({
       skip,
       take: limit,
-      orderBy: { peraturan_id: "desc" },
+      orderBy: { id: "desc" },
       where: {
         AND: [
-          { tipe_dokumen: "TYPE_4" },
-          { kondisi: "TYPE_3" },
           search ? { judul: { contains: search } } : {},
         ],
       },
     });
 
-    const totalPosts = await prisma.ppj_peraturan.count({
+     // Ubah semua BigInt ke String
+    const formattedData = await posts.map((row) => {
+      return Object.fromEntries(
+        Object.entries(row).map(([key, value]) => [
+          key,
+          typeof value === "bigint" ? value.toString() : value,
+        ])
+      );
+    });
+
+    const totalPosts = await prisma.tb_infografis.count({
       where: {
         AND: [
-          { tipe_dokumen: "TYPE_4" },
-          { kondisi: "TYPE_3" },
           search ? { judul: { contains: search } } : {},
         ],
       },
@@ -66,7 +84,7 @@ exports.getPaginationPutusan = async (req, res) => {
     return res.status(200).json({
       status: true,
       data: {
-        posts,
+        posts: formattedData,
         currentPage: page,
         totalPages: Math.ceil(totalPosts / limit),
         totalPosts,
@@ -81,22 +99,22 @@ exports.getPaginationPutusan = async (req, res) => {
   }
 };
 
-exports.insertViews = async (req, res) => {
+exports.InsertViewr = async (req, res) => {
   try {
     const dataPost = await req.body;
     
     let dataCatgory = await prisma.$queryRawUnsafe(
-          `SELECT view_count FROM ppj_peraturan where slug="${dataPost.slug}"`
+          `SELECT viewr FROM tb_infografis where id=${dataPost.id}`
         );
 
-    let jmlView = await dataCatgory[0].view_count == null ? 0 : Number(dataCatgory[0].view_count);
+    let jmlView = await dataCatgory[0].viewr == null ? 0 : Number(dataCatgory[0].viewr);
 
-    const data = await prisma.ppj_peraturan.update({
+    const data = await prisma.tb_infografis.update({
       where: {
-        slug: dataPost.slug,
+        id: dataPost.id,
       },
       data: {
-        view_count: jmlView + 1,
+        viewr: jmlView + 1,
       },
     });
     
