@@ -12,4 +12,8 @@ router
   .route("/putusan/insertViews")
   .post(putusanController.insertViews);
 
+router
+  .route("/putusan/addDownload")
+  .post(putusanController.addDownload);
+
 module.exports = router;

@@ -102,12 +102,17 @@ exports.getPaginationInfografis = async (req, res) => {
 exports.InsertViewr = async (req, res) => {
   try {
     const dataPost = await req.body;
-    
-    let dataCatgory = await prisma.$queryRawUnsafe(
-          `SELECT viewr FROM tb_infografis where id=${dataPost.id}`
-        );
 
-    let jmlView = await dataCatgory[0].viewr == null ? 0 : Number(dataCatgory[0].viewr);
+     let dataCategory = await prisma.tb_infografis.findUnique({
+      where: {
+        id: dataPost.id,
+      },
+      select: {
+        viewr: true,
+      },
+    });
+
+    let jmlView = await dataCategory.viewr == null ? 0 : Number(dataCategory.viewr);
 
     const data = await prisma.tb_infografis.update({
       where: {

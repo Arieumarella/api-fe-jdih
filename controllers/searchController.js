@@ -345,6 +345,85 @@ exports.getUnitOrganisasi = async (req, res) => {
   }
 };
 
+
+exports.addViews = async (req, res) => {
+  try {
+    const dataPost = await req.body;
+
+    let dataCategory = await prisma.ppj_peraturan.findUnique({
+      where: {
+        slug: dataPost.slug,
+      },
+      select: {
+        view_count: true,
+      },
+    });
+
+    let jmlView = await dataCategory.view_count == null ? 0 : Number(dataCategory.view_count);
+
+    const data = await prisma.ppj_peraturan.update({
+      where: {
+        slug: dataPost.slug,
+      },
+      data: {
+        view_count: jmlView + 1,
+      },
+    });
+    
+    
+    return res.status(200).json({
+      status: true,
+      message: "data berhasil diupdate",
+      hasil: data
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: false,
+      message: error,
+    });
+  }
+};
+
+exports.addDownload = async (req, res) => {
+  try {
+    const dataPost = await req.body;
+
+    let dataCategory = await prisma.ppj_peraturan.findUnique({
+      where: {
+        slug: dataPost.slug,
+      },
+      select: {
+        download_count: true,
+      },
+    });
+
+    let jmlDownload = await dataCategory.download_count == null ? 0 : Number(dataCategory.download_count);
+
+    const data = await prisma.ppj_peraturan.update({
+      where: {
+        slug: dataPost.slug,
+      },
+      data: {
+        download_count: jmlDownload + 1,
+      },
+    });
+    
+    
+    return res.status(200).json({
+      status: true,
+      message: "data berhasil diupdate",
+      hasil: data
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: false,
+      message: error,
+    });
+  }
+};
+
 function formatRelativeDate(yyyymmdd) {
   const year = parseInt(yyyymmdd.slice(0, 4));
   const month = parseInt(yyyymmdd.slice(4, 6)) - 1; // bulan dimulai dari 0

@@ -24,4 +24,15 @@ router
 
 router.route("/search/getUnor").get(searchController.getUnitOrganisasi);
 
+router
+  .route("/search/addViews")
+  .post(searchController.addViews);
+
+router
+  .route("/search/addDownload")
+  .post(searchController.addDownload);
+
+
+
+
 module.exports = router;

@@ -84,12 +84,17 @@ exports.getPaginationPutusan = async (req, res) => {
 exports.insertViews = async (req, res) => {
   try {
     const dataPost = await req.body;
-    
-    let dataCatgory = await prisma.$queryRawUnsafe(
-          `SELECT view_count FROM ppj_peraturan where slug="${dataPost.slug}"`
-        );
 
-    let jmlView = await dataCatgory[0].view_count == null ? 0 : Number(dataCatgory[0].view_count);
+    let dataCategory = await prisma.ppj_peraturan.findUnique({
+      where: {
+        slug: dataPost.slug,
+      },
+      select: {
+        view_count: true,
+      },
+    });
+
+    let jmlView = await dataCategory.view_count == null ? 0 : Number(dataCategory.view_count);
 
     const data = await prisma.ppj_peraturan.update({
       where: {
@@ -104,6 +109,46 @@ exports.insertViews = async (req, res) => {
     return res.status(200).json({
       status: true,
       message: "data berhasil diupdate",
+      hasil: data
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: false,
+      message: error,
+    });
+  }
+};
+
+exports.addDownload = async (req, res) => {
+  try {
+    const dataPost = await req.body;
+
+    let dataCategory = await prisma.ppj_peraturan.findUnique({
+      where: {
+        slug: dataPost.slug,
+      },
+      select: {
+        download_count: true,
+      },
+    });
+
+    let jmlDownload = await dataCategory.download_count == null ? 0 : Number(dataCategory.download_count);
+
+    const data = await prisma.ppj_peraturan.update({
+      where: {
+        slug: dataPost.slug,
+      },
+      data: {
+        download_count: jmlDownload + 1,
+      },
+    });
+    
+    
+    return res.status(200).json({
+      status: true,
+      message: "data berhasil diupdate",
+      hasil: data
     });
   } catch (error) {
     console.log(error);

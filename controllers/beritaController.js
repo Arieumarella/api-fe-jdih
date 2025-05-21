@@ -77,11 +77,16 @@ exports.insertviews = async (req, res) => {
   try {
     const dataPost = await req.body;
     
-    let dataCatgory = await prisma.$queryRawUnsafe(
-          `SELECT views FROM tb_berita where slug="${dataPost.slug}"`
-        );
+   let dataCategory = await prisma.tb_berita.findUnique({
+      where: {
+        slug: dataPost.slug,
+      },
+      select: {
+        views: true,
+      },
+    });
 
-    let jmlView = await dataCatgory[0].views == null ? 0 : Number(dataCatgory[0].views);
+    let jmlView = await dataCategory?.views == null ? 0 : Number(dataCategory?.views);
 
     const data = await prisma.tb_berita.update({
       where: {
