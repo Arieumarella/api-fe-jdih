@@ -1,13 +1,11 @@
 const express = require("express");
 const cors = require("cors");
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
 const app = express();
 const port = 3000;
 
 app.use(
   cors({
-    origin: "*", // Sesuaikan dengan port dan domain front-end
+    origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE"],
   })
 );
@@ -34,6 +32,7 @@ const pengunjungJdih = require("./routes/pengunjungJdih.js");
 const aiRouter = require("./routes/aiRouter.js");
 const infografishRouter = require("./routes/infografishRouter.js");
 const mouRouter = require("./routes/mouRouter.js");
+const dokumenLangkaRouter = require("./routes/dokumenLangkaRouter.js");
 
 
 app.use(homeRouter);
@@ -54,6 +53,7 @@ app.use(pengunjungJdih);
 app.use(aiRouter);
 app.use(infografishRouter);
 app.use(mouRouter);
+app.use(dokumenLangkaRouter);
 
 // Menjalankan server Express.js
 app.listen(port, () => {
