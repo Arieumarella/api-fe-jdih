@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 exports.getNuwPeraturan = async (req, res) => {
   try {
     const qry =
-      "SELECT judul,slug, download_count,tanggal, status,if(a.file_abstrak = '', false, CONCAT('https://jdih.pu.go.id/internal/assets/assets/produk_abstrak/', b.percategorycode,'/',left(tanggal,4),'/', mid(tanggal,5,2), '/', a.file_abstrak)) as path_abstrak, CONCAT('https://jdih.pu.go.id/internal/assets/assets/produk/', b.percategorycode,'/',left(tanggal,4),'/', mid(tanggal,5,2), '/', a.file_upload) as path_file, a.file_upload from (SELECT * from ppj_peraturan where tipe_dokumen=1 AND (sifat=1 or sifat is null) and approval_2 ) as a LEFT JOIN (SELECT * FROM ppj_peraturan_category)  as b on a.peraturan_category_id=b.peraturan_category_id order by a.peraturan_id DESC LIMIT 5";
+      "SELECT judul,slug, download_count,tanggal, status,if(a.file_abstrak = '', false, CONCAT('https://jdih.pu.go.id/internal/assets/assets/produk_abstrak/', b.percategorycode,'/',left(tanggal,4),'/', mid(tanggal,5,2), '/', a.file_abstrak)) as path_abstrak, CONCAT('https://jdih.pu.go.id/internal/assets/assets/produk/', b.percategorycode,'/',left(tanggal,4),'/', mid(tanggal,5,2), '/', a.file_upload) as path_file, a.file_upload from (SELECT * from ppj_peraturan where tipe_dokumen=1 and approval_2 order by peraturan_id DESC LIMIT 5) as a LEFT JOIN (SELECT * FROM ppj_peraturan_category)  as b on a.peraturan_category_id=b.peraturan_category_id";
 
     const dataPeraturan = await prisma.$queryRawUnsafe(qry);
 

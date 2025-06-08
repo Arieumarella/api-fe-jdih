@@ -130,19 +130,21 @@ exports.getDataPeraturan = async (req, res) => {
       });
     }
     
-    const params = {
-      index: "peraturan",
-      body: {
-        from: parseInt(start),
-        size: parseInt(length),
-        query: {
-          bool: {
-            should: shouldClauses,
-          },
-        },
-        sort: [{ _score: { order: "desc" } }],
-      },
-    };
+const isShouldEmpty = shouldClauses.length === 0;
+
+const params = {
+  index: "peraturan",
+  body: {
+    from: parseInt(start),
+    size: parseInt(length),
+    query: isShouldEmpty
+      ? { match_all: {} }
+      : { bool: { should: shouldClauses } },
+    sort: isShouldEmpty
+      ? [{ tanggal: { order: "desc" } }] // Urutkan berdasarkan tanggal terbaru
+      : [{ _score: { order: "desc" } }],
+  },
+};
 
     
 

@@ -3,5 +3,6 @@ const express = require("express"),
   aiController = require("../controllers/aiController");
 
 router.route("/ai/chat").post(aiController.Chat);
+router.route("/ai/chatGeneral").post(aiController.ChatGeneral);
 
 module.exports = router;
