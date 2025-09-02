@@ -135,7 +135,7 @@ model ppj_peraturan {
   nomor                   String                     @db.VarChar(100)
   link_url                String                     @db.VarChar(255)
   keyword                 String                     @db.Text
-  slug                    String?                    @unique
+  slug                    String?                    @db.Text
 
   @@index([dept_id], map: "fk_ppj_peraturan_ppj_departemen1_idx")
   @@index([peraturan_category_id], map: "fk_ppj_peraturan_ppj_peraturan_category1_idx")
@@ -354,6 +354,7 @@ model t_pengusulan_puu {
   waktuPembahasan  String?   @db.VarChar(255)
   waktuHarmonisasi String?   @db.VarChar(255)
   waktuPenetapan   String?   @db.VarChar(255)
+  lini_masa        String?   @db.VarChar(255)
   created_at       DateTime? @db.DateTime(0)
   update_at        DateTime? @db.DateTime(0)
 }
@@ -472,8 +473,8 @@ model tb_berita {
   pengubah       String  @db.VarChar(35)
   tgl_modifikasi String  @db.VarChar(35)
   nomor          String  @db.VarChar(35)
-  views          Float?  
-  slug           String? @unique
+  views          Float?
+  slug           String? @db.Text
 }
 
 model tb_bidang_hukum {
@@ -521,20 +522,20 @@ model tb_dokumentasi_puu_detail {
   id                  Int                                @id @default(autoincrement())
   id_dokumen_puu      Int?
   daftar_produk_hukum String?                            @db.Text
-  capaian             tb_dokumentasi_puu_detail_capaian? @default(dbgenerated("0"))
+  capaian             tb_dokumentasi_puu_detail_capaian? @default(TYPE_0)
   tgl_buat            String?                            @db.VarChar(15)
   pembuat             String?                            @db.VarChar(35)
   tgl_modifikasi      String?                            @db.VarChar(15)
   pengubah            String?                            @db.VarChar(35)
   id_peraturan        Int?
-  tipe                tb_dokumentasi_puu_detail_tipe?    @default(dbgenerated("0"))
+  tipe                tb_dokumentasi_puu_detail_tipe?    @default(TYPE_0)
 }
 
 model tb_dokumentasi_puu_detail_produk_hukum {
   id                    Int                                                     @id @default(autoincrement())
   id_dokumen_puu_detail Int?
   produk_hukum          String?                                                 @db.Text
-  status                tb_dokumentasi_puu_detail_produk_hukum_status?          @default(dbgenerated("0"))
+  status                tb_dokumentasi_puu_detail_produk_hukum_status?          @default(TYPE_0)
   tgl_buat              String?                                                 @db.VarChar(15)
   pembuat               String?                                                 @db.VarChar(35)
   tgl_modifikasi        String?                                                 @db.VarChar(15)
@@ -956,6 +957,30 @@ model tb_tu_menteri {
   pembuat            String @db.VarChar(50)
   tgl_modifikasi     String @db.VarChar(20)
   pengubah           String @db.VarChar(50)
+}
+
+model t_konsultasi_publik {
+  id                  Int       @id @default(autoincrement())
+  judul               String?   @db.VarChar(255)
+  keterangan          String?   @db.Text
+  tanggal_pelaksanaan DateTime? @db.Date
+  tanggal_selesai_kp  DateTime? @db.Date
+  status              String?   @db.VarChar(255)
+  gambar              String?   @db.Text
+  view                Int?
+  file_draft          String?   @db.VarChar(255)
+  file_konsepsi_pengaturan  String?   @db.VarChar(255)
+  file_notulensi      String?   @db.VarChar(255)
+  file_dokumentasi    String?   @db.VarChar(255)
+  slug                String?   @db.VarChar(255) @unique
+  created_at          DateTime? @db.DateTime(0)
+  updated_at          DateTime? @db.DateTime(0)
+}
+
+model t_log_download {
+  id           BigInt    @id @default(autoincrement())
+  id_peraturan Int?
+  created_at   DateTime? @db.DateTime(0)
 }
 
 enum ppj_peraturan_tipe_dokumen {
