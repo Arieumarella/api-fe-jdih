@@ -961,18 +961,40 @@ model tb_tu_menteri {
 
 model t_konsultasi_publik {
   id                  Int       @id @default(autoincrement())
-  judul               String?   @db.VarChar(255)
-  keterangan          String?   @db.Text
+  judul_rancangan_peraturan               String?   @db.VarChar(255)
+  dept_id          String?   @db.VarChar(255)
+  parent_id          String?   @db.VarChar(255)
+  jenis_perencanaan          String?   @db.VarChar(255)
+  Tempat_pelaksanaan          String?   @db.VarChar(255)
+  tgl_pelaksanaan_penyusunan DateTime? @db.Date
   tanggal_pelaksanaan DateTime? @db.Date
-  tanggal_selesai_kp  DateTime? @db.Date
-  status              String?   @db.VarChar(255)
-  gambar              String?   @db.Text
+  tanggal_selesai_kp DateTime? @db.Date
+  status   String?   @db.VarChar(255)
+  gambar_1            String?   @db.Text
+  gambar_2            String?   @db.VarChar(255)
+  gambar_3            String?   @db.VarChar(255)
+  gambar_4            String?   @db.VarChar(255)
+  gambar_5            String?   @db.VarChar(255)
   view                Int?
   file_draft          String?   @db.VarChar(255)
   file_konsepsi_pengaturan  String?   @db.VarChar(255)
   file_notulensi      String?   @db.VarChar(255)
   file_dokumentasi    String?   @db.VarChar(255)
+  file_andak    String?   @db.VarChar(255)
   slug                String?   @db.VarChar(255) @unique
+  created_at          DateTime? @db.DateTime(0)
+  updated_at          DateTime? @db.DateTime(0)  
+  
+}
+
+model t_masukan_online_kp {
+  id                  Int       @id @default(autoincrement())
+  slug                String?   @db.VarChar(255) @unique
+  nama                String?   @db.VarChar(255)
+  email               String?   @db.VarChar(255)
+  keterangan          String?   @db.Text
+  file_masukan        String?   @db.VarChar(255)
+  status_balasan      String?   @db.VarChar(255)
   created_at          DateTime? @db.DateTime(0)
   updated_at          DateTime? @db.DateTime(0)
 }

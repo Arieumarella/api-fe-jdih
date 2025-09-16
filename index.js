@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const port = 3000;
+const port = 9000;
 
 app.use(
   cors({
@@ -34,8 +34,6 @@ const infografishRouter = require("./routes/infografishRouter.js");
 const mouRouter = require("./routes/mouRouter.js");
 const dokumenLangkaRouter = require("./routes/dokumenLangkaRouter.js");
 const KPRouter = require("./routes/KPRouter.js");
-
-
 
 app.use(homeRouter);
 app.use(BelanggananDanKepuasanMasyarakatRouter);
