@@ -5,7 +5,8 @@ const port = 9000;
 
 app.use(
   cors({
-    origin: "*",
+    origin: "http://localhost:5173", // sesuaikan dengan origin frontend Anda
+    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
   })
 );
