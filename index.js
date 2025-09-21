@@ -34,6 +34,7 @@ const infografishRouter = require("./routes/infografishRouter.js");
 const mouRouter = require("./routes/mouRouter.js");
 const dokumenLangkaRouter = require("./routes/dokumenLangkaRouter.js");
 const KPRouter = require("./routes/KPRouter.js");
+const KpPerencanaanRouter = require("./routes/KpPerencanaanRouter.js");
 
 app.use(homeRouter);
 app.use(BelanggananDanKepuasanMasyarakatRouter);
@@ -55,6 +56,7 @@ app.use(infografishRouter);
 app.use(mouRouter);
 app.use(dokumenLangkaRouter);
 app.use(KPRouter);
+app.use(KpPerencanaanRouter);
 
 // Menjalankan server Express.js
 app.listen(port, () => {

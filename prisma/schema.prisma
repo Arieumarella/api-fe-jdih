@@ -999,6 +999,17 @@ model t_masukan_online_kp {
   updated_at          DateTime? @db.DateTime(0)
 }
 
+model t_konsultasi_publik_perencanaan {
+  id                  Int       @id @default(autoincrement())
+  judul                String?   @db.VarChar(255)
+  path_konsepsi                String?   @db.VarChar(255)
+  nm_file_konsepsi               String?   @db.VarChar(255)
+  tahun_anggaran          String?    @db.VarChar(10)
+  slug        String?   @db.VarChar(255)
+  created_at          DateTime? @db.DateTime(0)
+  updated_at          DateTime? @db.DateTime(0)
+}
+
 model t_log_download {
   id           BigInt    @id @default(autoincrement())
   id_peraturan Int?
