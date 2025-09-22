@@ -11,4 +11,8 @@ router
   .route("/kp-perencanaan/masukan")
   .post(KpPerencanaanController.insertMasukan);
 
+router
+  .route("/kp-perencanaan/insert-jdudul")
+  .post(KpPerencanaanController.insertJudulKperencanaan);
+
 module.exports = router;

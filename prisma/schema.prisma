@@ -1021,6 +1021,18 @@ model t_masukan_kp_perencanaan {
   updated_at          DateTime? @db.DateTime(0)
 }
 
+model t_masukan_judul_kp {
+  id                  Int       @id @default(autoincrement())
+  judul               String?   @db.VarChar(255)
+  substansi           String?   @db.Text
+  nama                String?   @db.VarChar(255)
+  email               String?   @db.VarChar(255)
+  asal                String?   @db.VarChar(255)
+  tahun               String?   @db.VarChar(10)
+  created_at          DateTime? @db.DateTime(0)
+  updated_at          DateTime? @db.DateTime(0)
+}
+
 model t_log_download {
   id           BigInt    @id @default(autoincrement())
   id_peraturan Int?

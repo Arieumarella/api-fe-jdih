@@ -66,8 +66,7 @@ exports.insertMasukan = async (req, res) => {
     console.log("Secret Key:", secretKey); // Debugging line
     console.log("Captcha Response:", captcha); // Debugging line
 
-    const verifyUrl =
-      "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+    const verifyUrl = process.env.RECAPTCHA_VALIDATE_URL;
 
     try {
       const body = new URLSearchParams();
@@ -106,7 +105,77 @@ exports.insertMasukan = async (req, res) => {
           updated_at: new Date(),
         },
       });
-      res.status(201).json({ message: "Masukan berhasil disimpan." });
+      res.status(201).json({
+        message:
+          "Masukan anda berhasil disimpan. Mohon menunggu email konfirmasi.",
+      });
+    } catch (dbError) {
+      res.status(500).json({
+        message: "Gagal menyimpan ke database.",
+        error: dbError.message,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Terjadi kesalahan server.", error });
+  }
+};
+
+exports.insertJudulKperencanaan = async (req, res) => {
+  try {
+    const { nama, asal, email, judul, substansi, captcha } = req.body;
+    // Validasi sederhana
+    if (!nama || !asal || !email || !judul || !substansi || !captcha) {
+      return res.status(400).json({ message: "Semua field harus diisi." });
+    }
+
+    // Verifikasi captcha Cloudflare Turnstile
+    const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+    const verifyUrl = process.env.RECAPTCHA_VALIDATE_URL;
+
+    try {
+      const body = new URLSearchParams();
+      body.append("secret", secretKey);
+      body.append("response", captcha);
+      body.append("remoteip", req.ip);
+
+      const captchaResponse = await axios.post(verifyUrl, body.toString(), {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+
+      if (!captchaResponse.data.success) {
+        return res.status(400).json({ message: "Verifikasi captcha gagal." });
+      }
+    } catch (captchaError) {
+      return res.status(500).json({
+        message: "Gagal memverifikasi captcha.",
+        error: captchaError.message,
+      });
+    }
+
+    // Ambil tahun saat ini
+    const now = new Date();
+    const tahun = now.getFullYear().toString();
+
+    // Simpan ke database t_masukan_judul_kp
+    try {
+      await prisma.t_masukan_judul_kp.create({
+        data: {
+          nama,
+          asal,
+          email,
+          judul,
+          substansi,
+          tahun,
+          created_at: now,
+          updated_at: now,
+        },
+      });
+      res.status(201).json({
+        message:
+          "Masukan anda berhasil disimpan. Mohon menunggu email konfirmasi.",
+      });
     } catch (dbError) {
       res.status(500).json({
         message: "Gagal menyimpan ke database.",
